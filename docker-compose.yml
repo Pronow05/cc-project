@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  budgeting:
+    build:
+      context: ./budgeting_service
+    ports:
+      - "8501:8501"  # Streamlit UI
+      - "5000:5000"  # API
+    volumes:
+      - budget_data:/app/data
+    networks:
+      - university_network
+
+  communication:
+    build:
+      context: ./communication_service
+    ports:
+      - "8502:8501"  # Streamlit UI
+    volumes:
+      - communication_data:/app/data
+    environment:
+      - BUDGETING_API_URL=http://budgeting:5000
+    networks:
+      - university_network
+    depends_on:
+      - budgeting
+
+volumes:
+  budget_data:
+  communication_data:
+
+networks:
+  university_network: 
