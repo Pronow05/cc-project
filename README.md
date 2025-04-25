@@ -84,4 +84,55 @@ The communication service relies on the budgeting service for:
 4. View department budget summaries
 5. Log in to the communication service
 6. Send messages between departments
-7. View received messages in your department's inbox 
+7. View received messages in your department's inbox
+
+## Health Monitoring
+
+The project includes both a command-line and visual health monitoring system that checks the status of all services and alerts when one goes down.
+
+### Prerequisites
+- Python 3.x
+- Additional packages: `pip install -r monitor_requirements.txt`
+
+### Command-Line Health Monitor
+```bash
+python health_monitor.py
+```
+
+This will:
+- Check all services every 5 seconds
+- Display the current status of all services in the terminal
+- Alert with red text when a service goes down
+- Alert with green text when a service comes back up
+
+### Visual Health Monitoring Dashboard
+```bash
+streamlit run health_monitor_ui.py
+```
+
+This will launch a browser-based dashboard that provides:
+- Visual status cards for each service showing whether they're online or offline
+- Real-time status history charts
+- Incident log with timestamps
+- Service response time measurements
+- Controls to pause/resume monitoring or clear the incident log
+
+The dashboard automatically refreshes and provides a complete picture of your microservices health.
+
+### Testing Service Failures
+
+To test how the system handles service failures:
+
+1. Start all services with `docker-compose up`
+2. Start either health monitor in a separate terminal
+3. To stop only the budgeting service:
+   ```bash
+   docker-compose stop budgeting
+   ```
+4. The health monitor will immediately show alerts that the budgeting service is down
+5. The communication service will continue to function in fallback mode
+6. To restart the budgeting service:
+   ```bash
+   docker-compose start budgeting
+   ```
+7. The health monitor will show alerts when the budgeting service comes back online 
